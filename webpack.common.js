@@ -17,7 +17,8 @@ console.log(entries);
 module.exports = {
   entry: {
     index: path.resolve(__dirname, 'src/views/index.pug'),
-    about: path.resolve(__dirname, 'src/views/about.pug')
+    // --> you can pass the variables in template from webpack config via resource query as stringified JSON
+    about: path.resolve(__dirname, 'src/views/about.pug?' + JSON.stringify({ title: 'The title for the page About ;-)' }))
   },
   output: {
     path: outputPath,
@@ -56,7 +57,8 @@ module.exports = {
           loader: 'responsive-loader',
           options: {
             adapter: require('responsive-loader/sharp'),
-            outputPath: 'img',
+            // image output filename
+            name: 'img/[name].[hash:8]-[width]w.[ext]',
             sizes: [320, 640, 960, 1200, 1800, 2400],
             format: 'webp',
             placeholder: true
@@ -68,11 +70,15 @@ module.exports = {
       {
         test: /\.(pug)$/,
         use: [
+          'html-loader', // <-- it's required for the 'html' method of pug-loader
           {
-            loader: 'posthtml-loader'
+            loader: 'posthtml-loader' // expected pure HTML, therefore use the `html` method for pug loader and additional `html-loader`
           },
           {
-            loader: PugPlugin.loader
+            loader: PugPlugin.loader,
+            options: {
+              method: 'html' // <-- it's required for 'posthtml-loader'
+            }
           }
         ]
       },

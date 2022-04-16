@@ -1,4 +1,4 @@
-console.log('Hello sadsa');
+console.log('Hello PUG PLUGIN!');
 
 const a = () => {
   console.log('Hello from the future!');
