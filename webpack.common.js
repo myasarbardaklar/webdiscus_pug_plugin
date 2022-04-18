@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const globule = require('globule');
 const PugPlugin = require('pug-plugin');
+//const PugPlugin = require('../../Phpstorm/GitHub/webpack/pug-plugin');
 
 const outputPath = path.resolve(__dirname, 'dist');
 console.log(outputPath);
@@ -53,6 +54,7 @@ module.exports = {
       // images loader
       {
         test: /\.(gif|png|jpe?g|ico|svg|webp)$/i,
+        type: 'asset/resource', // <-- mega important!
         use: {
           loader: 'responsive-loader',
           options: {
@@ -70,14 +72,15 @@ module.exports = {
       {
         test: /\.(pug)$/,
         use: [
-          'html-loader', // <-- it's required for the 'html' method of pug-loader
-          {
-            loader: 'posthtml-loader' // expected pure HTML, therefore use the `html` method for pug loader and additional `html-loader`
-          },
+          // 'html-loader', // <-- it's required for the 'html' method of pug-loader
+          // {
+          //   loader: 'posthtml-loader' // expected pure HTML, therefore use the `html` method for pug loader and additional `html-loader`
+          // },
           {
             loader: PugPlugin.loader,
             options: {
-              method: 'html' // <-- it's required for 'posthtml-loader'
+              //method: 'html' // <-- required for 'posthtml-loader', 10x slower than `render` method by serv and watch
+              method: 'render' // <-- fastest render method by serv and watch
             }
           }
         ]
