@@ -17,20 +17,32 @@ console.log(entries);
 
 module.exports = {
   entry: {
-    index: path.resolve(__dirname, 'src/views/index.pug'),
-    // --> you can pass the variables in template from webpack config via resource query as stringified JSON
-    about: path.resolve(__dirname, 'src/views/about.pug?' + JSON.stringify({ title: 'The title for the page About ;-)' }))
+    /* bootstrap: path.resolve(__dirname, `src/scss/bootstrap.scss`),
+    tailwind: path.resolve(__dirname, `src/scss/tailwind.scss`),
+    swiper: path.resolve(__dirname, `src/scss/swiper.scss`),
+    main: path.resolve(__dirname, `src/scss/main.scss`) */
+    index: path.resolve(
+      process.cwd(),
+      `src/views/index.pug?${JSON.stringify({ title: 'Index page' })}`
+    ),
+    about: path.resolve(
+      process.cwd(),
+      `src/views/about.pug?${JSON.stringify({ title: 'About page' })}`
+    )
   },
   output: {
     path: outputPath,
     publicPath: '/',
-    filename: 'js/[name].[contenthash:8].js',
+    filename: 'js/[name].[contenthash:4].js',
     clean: true
   },
   resolve: {
     extensions: ['.ts', '.js']
   },
   devServer: {
+    devMiddleware: {
+      writeToDisk: true
+    },
     static: {
       directory: outputPath,
       watch: true
@@ -43,7 +55,7 @@ module.exports = {
       modules: [
         PugPlugin.extractCss({
           // css output filename
-          filename: 'css/[name].[contenthash:8].css'
+          filename: 'css/[name].[contenthash:4].css'
         })
       ]
     })
@@ -51,7 +63,7 @@ module.exports = {
 
   module: {
     rules: [
-      // images loader
+      // image loader
       {
         test: /\.(gif|png|jpe?g|ico|svg|webp)$/i,
         type: 'asset/resource', // <-- mega important!
@@ -80,7 +92,10 @@ module.exports = {
             loader: PugPlugin.loader,
             options: {
               //method: 'html' // <-- required for 'posthtml-loader', 10x slower than `render` method by serv and watch
-              method: 'render' // <-- fastest render method by serv and watch
+              method: 'render', // <-- fastest render method by serv and watch
+              data: {
+                wImageSizes: [320, 640, 768, 1024, 1280, 1536]
+              }
             }
           }
         ]

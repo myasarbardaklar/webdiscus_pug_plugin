@@ -1,7 +1,7 @@
 extends ./layouts/default.layout.pug
 
 block body
-    h1.text-3xl.font-bold.underline.text-white.bg-red-700.p-8.font-sansSerif.shadow-2xl= title
+    h1.text-3xl.font-bold.underline.text-white.bg-purple-700.p-8.font-sansSerif.shadow-2xl= title
     a.text-ahmed(href="/about.html") about me
     button.text-ahmed click me
     p(x-text="open")
@@ -16,9 +16,14 @@ block body
         // So, to extract the `placeholder` from the `responsive-loader` result, use: `?prop=placeholder`, etc.
 
         const imgSrc = require('../img/1033740.jpg?size=640');
-        const imgSrcSet = require('../img/1033740.jpg?prop=srcSet');
+        const imgSrcSet = require('../img/1033740.jpg?prop=images');
     
     pre image src: #{imgSrc}
+    
+    // WImage
+    +WImage('../img/1033740.jpg')
+
+    +debug(imgSrcSet)
 
     img(srcset=imgSrcSet src=imgSrc alt="alt")
     br

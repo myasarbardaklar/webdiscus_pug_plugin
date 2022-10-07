@@ -1,4 +1,30 @@
+mixin debug(data)
+    pre
+        code #{JSON.stringify(data, JSON_PRETTY_PRINT, 2)}
+
 mixin WImage(file, size=960)
+    -
+        let wImageSrcSet = require(`../${file}?prop=srcSet`);
+        let wImageSrc = require(`../${file}?prop=src`);
+        let wImageArray = require(`../${file}?prop=images`);
+    
+    pre= wImageSrcSet.images
+
+    each size in wImageSizes
+        pre= size
+
+    img(src=wImageArray.path, alt="alt")
+    
     .w-img
         picture
-            source(srcset=file.srcSet, type="image/webp")
+            each size in wImageSizes
+                source(
+                    media=`(max-width: ${size}px)`,
+                    srcset=require(`../${file}?size=${size}`),
+                    type="image/webp"
+                )
+            img(
+                src=wImageSrc,
+                loading="lazy",
+                alt="alt"
+            )
